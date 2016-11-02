@@ -1,15 +1,26 @@
+import pygame
+from pygame.locals import *
+import time
+from array import array
+import sys
+
 class CWNode:
     def __init__(self, char):
         self.left = None
         self.right = None
         self.char = char
 
-class CWTree:
-    LEFT = False
-    RIGHT = True
+class CWTree(pygame.mixer.Sound):
+    DIT = False
+    DAH = True
     def __init__(self):
+        pygame.mixer.pre_init(44100, -16, 1, 1024)
+        pygame.init()
         self.start = CWNode(None)
         self.state = self.start
+        self.frequency = 650
+        pygame.mixer.Sound.__init__( self, buffer=self.getToneBuffer() )
+        self.set_volume(0.75)
 
         # Level 1
         self.start.left = CWNode("E")
@@ -64,6 +75,27 @@ class CWTree:
         self.start.right.right.right.right.left = CWNode("9")
         self.start.right.right.right.right.right = CWNode("0")
 
+    def getToneBuffer(self):
+        period = 110
+        samples = array("h", [0] * period)
+        amplitude = 2 ** ( abs( pygame.mixer.get_init()[1] ) - 1 ) - 1
+        for time in xrange(period):
+            if time < period / 2:
+                samples[time] = amplitude
+            else:
+                samples[time] = -amplitude
+        return samples
+
+    def playDah(self):
+        self.play( -1 )
+        time.sleep( 0.30 )
+        self.stop()
+
+    def playDit(self):
+        self.play( -1 )
+        time.sleep( 0.10 )
+        self.stop()
+
     def traverse(self, direction):
         if self.state == None:
             return
@@ -77,5 +109,6 @@ class CWTree:
         
     def flush(self):
         if self.state.char != None:
-            print(self.state.char)
+            sys.stdout.write( self.state.char )
+            sys.stdout.flush()
         self.reset()

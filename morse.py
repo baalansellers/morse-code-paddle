@@ -16,21 +16,21 @@ keyUpStart = 0.0
 
 def bumpLeftCheck(reading):
    if ( leftSwitch and not reading ):
-      morse.traverse(morse.LEFT)
-      print("Move Left")
+      morse.traverse(morse.DIT)
+      morse.playDit()
 
 def bumpRightCheck(reading):
    if ( rightSwitch and not reading ):
-      morse.traverse(morse.RIGHT)
-      print("Move Right")
+      morse.traverse(morse.DAH)
+      morse.playDah()
 
 def timeCapture(readLeft, readRight):
    global keyUpStart
    if ( readLeft and readRight and ( not leftSwitch or not rightSwitch ) ):
       keyUpStart = time.time()
-      print( "keyUpStart: " + str(keyUpStart) )
 
 if __name__ == "__main__":
+   print("Ready!")
    while True:
       readLeft = GPIO.input(pinL)
       readRight = GPIO.input(pinR)
@@ -39,7 +39,7 @@ if __name__ == "__main__":
       bumpRightCheck(readRight)
       leftSwitch = readLeft
       rightSwitch = readRight
-      if ( keyUpStart > 0.0 and time.time() - keyUpStart > 0.35 ):
+      if ( keyUpStart > 0.0 and time.time() - keyUpStart > 0.40 ):
          morse.flush()
          keyUpStart = 0
       time.sleep(0.01)
