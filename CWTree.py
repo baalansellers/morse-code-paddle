@@ -87,14 +87,14 @@ class CWTree(pygame.mixer.Sound):
         return samples
 
     def playDah(self):
-        self.play( -1 )
-        time.sleep( 0.30 )
-        self.stop()
+        self.play( 3 )
+        #time.sleep( 0.30 )
+        #self.stop()
 
     def playDit(self):
-        self.play( -1 )
-        time.sleep( 0.10 )
-        self.stop()
+        self.play( 1 )
+        #time.sleep( 0.10 )
+        #self.stop()
 
     def traverse(self, direction):
         if self.state == None:
