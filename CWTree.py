@@ -6,8 +6,8 @@ import sys
 
 class CWNode:
     def __init__(self, char):
-        self.left = None
-        self.right = None
+        self.dit = None
+        self.dah = None
         self.char = char
 
 class CWTree(pygame.mixer.Sound):
@@ -23,57 +23,57 @@ class CWTree(pygame.mixer.Sound):
         self.set_volume(0.75)
 
         # Level 1
-        self.start.left = CWNode("E")
-        self.start.right = CWNode("T")
+        self.start.dit = CWNode("E")
+        self.start.dah = CWNode("T")
 
         # Level 2
-        self.start.left.left = CWNode("I")
-        self.start.left.right = CWNode("A")
-        self.start.right.left = CWNode("N")
-        self.start.right.right = CWNode("M")
+        self.start.dit.dit = CWNode("I")
+        self.start.dit.dah = CWNode("A")
+        self.start.dah.dit = CWNode("N")
+        self.start.dah.dah = CWNode("M")
 
         # Level 3
-        self.start.left.left.left = CWNode("S")
-        self.start.left.left.right = CWNode("U")
-        self.start.left.right.left = CWNode("R")
-        self.start.left.right.right = CWNode("W")
-        self.start.right.left.left = CWNode("D")
-        self.start.right.left.right = CWNode("K")
-        self.start.right.right.left = CWNode("G")
-        self.start.right.right.right = CWNode("O")
+        self.start.dit.dit.dit = CWNode("S")
+        self.start.dit.dit.dah = CWNode("U")
+        self.start.dit.dah.dit = CWNode("R")
+        self.start.dit.dah.dah = CWNode("W")
+        self.start.dah.dit.dit = CWNode("D")
+        self.start.dah.dit.dah = CWNode("K")
+        self.start.dah.dah.dit = CWNode("G")
+        self.start.dah.dah.dah = CWNode("O")
 
         # Level 4
-        self.start.left.left.left.left = CWNode("H")
-        self.start.left.left.left.right = CWNode("V")
-        self.start.left.left.right.left = CWNode("F")
-        self.start.left.left.right.right = CWNode(None)
-        self.start.left.right.left.left = CWNode("L")
-        self.start.left.right.left.right = CWNode(None)
-        self.start.left.right.right.left = CWNode("P")
-        self.start.left.right.right.right = CWNode("J")
-        self.start.right.left.left.left = CWNode("B")
-        self.start.right.left.left.right = CWNode("X")
-        self.start.right.left.right.left = CWNode("C")
-        self.start.right.left.right.right = CWNode("Y")
-        self.start.right.right.left.left = CWNode("Z")
-        self.start.right.right.left.right = CWNode("Q")
-        self.start.right.right.right.left = CWNode(None)
-        self.start.right.right.right.right = CWNode(None)
+        self.start.dit.dit.dit.dit = CWNode("H")
+        self.start.dit.dit.dit.dah = CWNode("V")
+        self.start.dit.dit.dah.dit = CWNode("F")
+        self.start.dit.dit.dah.dah = CWNode(None)
+        self.start.dit.dah.dit.dit = CWNode("L")
+        self.start.dit.dah.dit.dah = CWNode(None)
+        self.start.dit.dah.dah.dit = CWNode("P")
+        self.start.dit.dah.dah.dah = CWNode("J")
+        self.start.dah.dit.dit.dit = CWNode("B")
+        self.start.dah.dit.dit.dah = CWNode("X")
+        self.start.dah.dit.dah.dit = CWNode("C")
+        self.start.dah.dit.dah.dah = CWNode("Y")
+        self.start.dah.dah.dit.dit = CWNode("Z")
+        self.start.dah.dah.dit.dah = CWNode("Q")
+        self.start.dah.dah.dah.dit = CWNode(None)
+        self.start.dah.dah.dah.dah = CWNode(None)
 
         # Level 5
-        self.start.left.left.left.left.left = CWNode("5")
-        self.start.left.left.left.left.right = CWNode("4")
-        self.start.left.left.left.right.right = CWNode("3")
-        self.start.left.left.right.right.right = CWNode("2")
-        self.start.left.right.left.right.left = CWNode("+")
-        self.start.left.right.right.right.right = CWNode("1")
-        self.start.right.left.left.left.left = CWNode("6")
-        self.start.right.left.left.left.right = CWNode("=")
-        self.start.right.left.left.right.left = CWNode("/")
-        self.start.right.right.left.left.left = CWNode("7")
-        self.start.right.right.right.left.left = CWNode("8")
-        self.start.right.right.right.right.left = CWNode("9")
-        self.start.right.right.right.right.right = CWNode("0")
+        self.start.dit.dit.dit.dit.dit = CWNode("5")
+        self.start.dit.dit.dit.dit.dah = CWNode("4")
+        self.start.dit.dit.dit.dah.dah = CWNode("3")
+        self.start.dit.dit.dah.dah.dah = CWNode("2")
+        self.start.dit.dah.dit.dah.dit = CWNode("+")
+        self.start.dit.dah.dah.dah.dah = CWNode("1")
+        self.start.dah.dit.dit.dit.dit = CWNode("6")
+        self.start.dah.dit.dit.dit.dah = CWNode("=")
+        self.start.dah.dit.dit.dah.dit = CWNode("/")
+        self.start.dah.dah.dit.dit.dit = CWNode("7")
+        self.start.dah.dah.dah.dit.dit = CWNode("8")
+        self.start.dah.dah.dah.dah.dit = CWNode("9")
+        self.start.dah.dah.dah.dah.dah = CWNode("0")
 
     def getToneBuffer(self):
         period = 110
@@ -99,10 +99,10 @@ class CWTree(pygame.mixer.Sound):
     def traverse(self, direction):
         if self.state == None:
             return
-        if direction and self.state.right != None:
-            self.state = self.state.right
-        elif self.state.left != None:
-            self.state = self.state.left
+        if direction and self.state.dah != None:
+            self.state = self.state.dah
+        elif self.state.dit != None:
+            self.state = self.state.dit
             
     def reset(self):
         self.state = self.start
