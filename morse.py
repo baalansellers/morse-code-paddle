@@ -12,29 +12,25 @@ GPIO.setup(pinR, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 morse = CWTree()
 leftSwitch = True
 rightSwitch = True
-keyUpStart = 0
-keyUpEnd = 0
+keyUpStart = 0.0
 
 def bumpLeftCheck(reading):
    if ( leftSwitch and not reading ):
-      morse.traverse(LEFT)
+      morse.traverse(morse.LEFT)
+      print("Move Left")
 
 def bumpRightCheck(reading):
    if ( rightSwitch and not reading ):
-      morse.traverse(RIGHT)
+      morse.traverse(morse.RIGHT)
+      print("Move Right")
 
 def timeCapture(readLeft, readRight):
+   global keyUpStart
    if ( readLeft and readRight and ( not leftSwitch or not rightSwitch ) ):
       keyUpStart = time.time()
-   if ( not readLeft and leftSwitch or not readRight and rightSwitch ):
-      keyUpEnd = time.time()
+      print( "keyUpStart: " + str(keyUpStart) )
 
 if __name__ == "__main__":
-   #morse.traverse(LEFT)
-   #morse.traverse(LEFT)
-   #morse.traverse(LEFT)
-   #morse.traverse(LEFT)
-   #morse.traverse(LEFT)
    while True:
       readLeft = GPIO.input(pinL)
       readRight = GPIO.input(pinR)
@@ -43,8 +39,7 @@ if __name__ == "__main__":
       bumpRightCheck(readRight)
       leftSwitch = readLeft
       rightSwitch = readRight
-      if keyUpEnd - keyUpStart > 0.15:
+      if ( keyUpStart > 0.0 and time.time() - keyUpStart > 0.35 ):
          morse.flush()
-      #print("Left: HIGH" if reading else "Left: LOW")
-      #print("Right: HIGH" if reading else "Right: LOW")
-      time.sleep(1)
+         keyUpStart = 0
+      time.sleep(0.01)
