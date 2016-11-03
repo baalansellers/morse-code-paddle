@@ -1,4 +1,4 @@
-import time
+import time, sys
 from CWTree import CWTree
 from RPi import GPIO
 
@@ -13,21 +13,21 @@ morse = CWTree()
 leftSwitch = True
 rightSwitch = True
 keyUpStart = 0.0
+spaceTimerStart = 0.0
 
 def bumpLeftCheck(reading):
    if ( leftSwitch and not reading ):
       morse.traverse(morse.DIT)
-      morse.playDit()
 
 def bumpRightCheck(reading):
    if ( rightSwitch and not reading ):
       morse.traverse(morse.DAH)
-      morse.playDah()
 
 def timeCapture(readLeft, readRight):
    global keyUpStart
+   global spaceTimerStart
    if ( readLeft and readRight and ( not leftSwitch or not rightSwitch ) ):
-      keyUpStart = time.time()
+      keyUpStart = spaceTimerStart = time.time()
 
 if __name__ == "__main__":
    print("Ready!")
@@ -39,7 +39,11 @@ if __name__ == "__main__":
       bumpRightCheck(readRight)
       leftSwitch = readLeft
       rightSwitch = readRight
-      if ( keyUpStart > 0.0 and time.time() - keyUpStart > 0.40 ):
+      if ( keyUpStart > 0.0 and time.time() - keyUpStart > 1.00 ):
          morse.flush()
-         keyUpStart = 0
+         keyUpStart = 0.0
+      if ( spaceTimerStart > 0.0 and time.time() - spaceTimerStart > 2.00 ):
+         sys.stdout.write( ' ' )
+         sys.stdout.flush()
+         spaceTimerStart = 0.0
       time.sleep(0.01)

@@ -1,8 +1,7 @@
 import pygame
 from pygame.locals import *
-import time
+import time, sys, threading, Queue
 from array import array
-import sys
 
 class CWNode:
     def __init__(self, char):
@@ -10,17 +9,61 @@ class CWNode:
         self.dah = None
         self.char = char
 
-class CWTree(pygame.mixer.Sound):
+class CWAudio(threading.Thread, pygame.mixer.Sound):
+    def __init__(self, notificationQ):
+        super(CWAudio, self).__init__()
+
+        # worker init
+        self.notificationQ = notificationQ
+        self.stopRequest = threading.Event()
+
+        # sound init
+        pygame.mixer.pre_init(44100, -16, 1, 1024)
+        pygame.init()
+        pygame.mixer.Sound.__init__( self, buffer=self.getToneBuffer() )
+        self.set_volume(0.75)
+
+    def run(self):
+        while not self.stopRequest.isSet():
+            try:
+                cmd = self.notificationQ.get(True, 0.05)
+                if cmd == 'DAH':
+                    self.playDah()
+                elif cmd == 'DIT':
+                    self.playDit()
+            except Queue.Empty:
+                continue
+
+    def getToneBuffer(self):
+        period = 110
+        samples = array("h", [0] * period)
+        amplitude = 2 ** ( abs( pygame.mixer.get_init()[1] ) - 1 ) - 1
+        for time in xrange(period):
+            if time < period / 2:
+                samples[time] = amplitude
+            else:
+                samples[time] = -amplitude
+        return samples
+
+    def playDah(self):
+        self.play( -1 )
+        time.sleep( 0.30 )
+        self.stop()
+        time.sleep( 0.02 )
+
+    def playDit(self):
+        self.play( -1 )
+        time.sleep( 0.10 )
+        self.stop()
+        time.sleep( 0.02 )
+
+class CWTree:
     DIT = False
     DAH = True
     def __init__(self):
-        pygame.mixer.pre_init(44100, -16, 1, 1024)
-        pygame.init()
-        self.start = CWNode(None)
+        self.start = CWNode( None )
         self.state = self.start
         self.frequency = 650
-        pygame.mixer.Sound.__init__( self, buffer=self.getToneBuffer() )
-        self.set_volume(0.75)
 
         # Level 1
         self.start.dit = CWNode("E")
@@ -75,34 +118,21 @@ class CWTree(pygame.mixer.Sound):
         self.start.dah.dah.dah.dah.dit = CWNode("9")
         self.start.dah.dah.dah.dah.dah = CWNode("0")
 
-    def getToneBuffer(self):
-        period = 110
-        samples = array("h", [0] * period)
-        amplitude = 2 ** ( abs( pygame.mixer.get_init()[1] ) - 1 ) - 1
-        for time in xrange(period):
-            if time < period / 2:
-                samples[time] = amplitude
-            else:
-                samples[time] = -amplitude
-        return samples
-
-    def playDah(self):
-        self.play( 3 )
-        #time.sleep( 0.30 )
-        #self.stop()
-
-    def playDit(self):
-        self.play( 1 )
-        #time.sleep( 0.10 )
-        #self.stop()
+        # Start Audio
+        self.alertQ = Queue.Queue()
+        self.speaker = CWAudio( self.alertQ )
+        self.speaker.start()
+        
 
     def traverse(self, direction):
         if self.state == None:
             return
         if direction and self.state.dah != None:
             self.state = self.state.dah
+            self.alertQ.put('DAH')
         elif self.state.dit != None:
             self.state = self.state.dit
+            self.alertQ.put('DIT')
             
     def reset(self):
         self.state = self.start
